@@ -7,13 +7,12 @@ class APIHandler(BaseHTTPRequestHandler):
         if self.path == "/api":
 
             dados = {
-                "mensagem": "Olá! A API Python respondeu.",
+                "mensagem": "FUNCIONAAAAAAAAAAAAAA.",
                 "linguagem": "Python"
             }
             resposta = json.dumps(dados).encode("utf-8")
             self.send_response(200)
 
-            # Header responsável pelo CORS
             self.send_header("Access-Control-Allow-Origin", "http://localhost:5500")
             self.send_header("Content-Type", "application/json")
             self.send_header("Content-Length", str(len(resposta)))
@@ -22,6 +21,7 @@ class APIHandler(BaseHTTPRequestHandler):
 
 
 servidor = HTTPServer(
+
     ("localhost", 8000),
     APIHandler
 )
