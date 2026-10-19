@@ -1,51 +1,32 @@
+"""
+CineTech - Backend Inicial (Ponto de Partida)
+Este é o único arquivo fornecido. Seu objetivo inicial é apenas verificar se o servidor roda.
+Todo o restante (routers, services, schemas e banco de dados) deve ser criado pela equipe
+seguindo o guia em: docs/2_PRD_BACKEND.md
+"""
 
-#import requests
+from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
+
+app = FastAPI(
+    title="CineTech API",
+    description="API do CineTech - Desenvolvida pelo time do Jovem Tech",
+    version="0.1.0"
+)
+
+# CORS liberado para o Frontend (React/Vite na porta 5173)
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 
-API_URL = "https://api.tvmaze.com"
-
-
-def buscar_serie(nome):
-    url = f"{API_URL}/search/shows"
-    parametros = {"q": nome}
-    try:
-        resposta = requests.get(url, params=parametros, timeout=10)
-        resposta.raise_for_status()
-        resultados = resposta.json()
-        return resultados
-
-    except requests.exceptions.RequestException as erro:
-        print(f"Erro ao consultar a API: {erro}")
-        return []
-
-def exibir_resultados(resultados):
-    if not resultados:
-        print("Nenhuma série encontrada.")
-        return
-
-    for resultado in resultados:
-        serie = resultado["show"]
-
-        print("-" * 40)
-        print(f"Nome: {serie.get('name', 'Não informado')}")
-        print(f"Idioma: {serie.get('language', 'Não informado')}")
-        print(f"Gêneros: {', '.join(serie.get('genres') or [])}")
-        print(f"Status: {serie.get('status', 'Não informado')}")
-        print(f"Estreia: {serie.get('premiered', 'Não informado')}")
-        print(f"Site: {serie.get('url', 'Não informado')}")
-
-        resumo = serie.get("summary") or "Sinopse indisponível."
-        print(f"Sinopse: {resumo}")
-
-def main():
-    nome = input("Digite o nome de uma série: ").strip()
-
-    if not nome:
-        print("Você precisa informar um nome.")
-        return
-
-    resultados = buscar_serie(nome)
-    exibir_resultados(resultados)
-
-if __name__ == "__main__":
-    main()
+@app.get("/")
+def health_check():
+    return {
+        "status": "online",
+        "message": "Servidor CineTech rodando! Agora siga as instruções em docs/2_PRD_BACKEND.md para construir a API."
+    }
