@@ -1,30 +1,51 @@
-from http.server import HTTPServer, BaseHTTPRequestHandler
-import json
 
-class APIHandler(BaseHTTPRequestHandler):
-
-    def do_GET(self):
-        if self.path == "/api":
-
-            dados = {
-                "mensagem": "FUNCIONAAAAAAAAAAAAAA.",
-                "linguagem": "Python"
-            }
-            resposta = json.dumps(dados).encode("utf-8")
-            self.send_response(200)
-
-            self.send_header("Access-Control-Allow-Origin", "http://localhost:5500")
-            self.send_header("Content-Type", "application/json")
-            self.send_header("Content-Length", str(len(resposta)))
-            self.end_headers()
-            self.wfile.write(resposta)
+#import requests
 
 
-servidor = HTTPServer(
+API_URL = "https://api.tvmaze.com"
 
-    ("localhost", 8000),
-    APIHandler
-)
 
-print("API rodando em http://localhost:8000")
-servidor.serve_forever()
+def buscar_serie(nome):
+    url = f"{API_URL}/search/shows"
+    parametros = {"q": nome}
+    try:
+        resposta = requests.get(url, params=parametros, timeout=10)
+        resposta.raise_for_status()
+        resultados = resposta.json()
+        return resultados
+
+    except requests.exceptions.RequestException as erro:
+        print(f"Erro ao consultar a API: {erro}")
+        return []
+
+def exibir_resultados(resultados):
+    if not resultados:
+        print("Nenhuma série encontrada.")
+        return
+
+    for resultado in resultados:
+        serie = resultado["show"]
+
+        print("-" * 40)
+        print(f"Nome: {serie.get('name', 'Não informado')}")
+        print(f"Idioma: {serie.get('language', 'Não informado')}")
+        print(f"Gêneros: {', '.join(serie.get('genres') or [])}")
+        print(f"Status: {serie.get('status', 'Não informado')}")
+        print(f"Estreia: {serie.get('premiered', 'Não informado')}")
+        print(f"Site: {serie.get('url', 'Não informado')}")
+
+        resumo = serie.get("summary") or "Sinopse indisponível."
+        print(f"Sinopse: {resumo}")
+
+def main():
+    nome = input("Digite o nome de uma série: ").strip()
+
+    if not nome:
+        print("Você precisa informar um nome.")
+        return
+
+    resultados = buscar_serie(nome)
+    exibir_resultados(resultados)
+
+if __name__ == "__main__":
+    main()

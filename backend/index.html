@@ -1,3 +1,6 @@
+<!-- Contexto, esse arquivo veio ao mundo no intuito apenas de testar a API com 
+ o localhost. Então por favor, não estranhem sua estrutura básica. -->
+
 <!DOCTYPE html>
 <html lang="pt-br">
 
@@ -13,7 +16,6 @@
     <p id="resultado"></p>
 
     <script>
-
         const botao = document.getElementById("buscar");
         const resultado = document.getElementById("resultado");
 
@@ -27,9 +29,7 @@
             catch (erro) {
                 console.error("Erro:", erro);
                 resultado.textContent = "Não foi possível acessar a API.";
-            }
-        });
-
+            }});
     </script>
 
 </body>
