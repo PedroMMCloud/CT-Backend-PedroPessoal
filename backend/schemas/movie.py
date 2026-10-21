@@ -1,9 +1,11 @@
-from pydantic import BaseModel, Field
+from typing import List, Optional
+
+from pydantic import BaseModel
 
 class MovieSchema(BaseModel):
     id: int
     title: str
-    summary: str
-    image: str
-    rating: float = Field(ge=0, le=10)
-    genres: list[str]
+    summary: Optional[str] = None
+    image: Optional[str] = None
+    rating: Optional[float] = None
+    genres: List[str] = []
