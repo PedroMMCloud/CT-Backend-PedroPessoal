@@ -3,7 +3,7 @@ import re
 from typing import List, Optional
 import httpx
 
-from movie import MovieSchema
+from schemas.movie import MovieSchema
 
 TVMAZE_SEARCH_URL = "https://api.tvmaze.com/search/shows"
 
